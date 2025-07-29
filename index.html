@@ -122,7 +122,7 @@
         // Importar las funciones de Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, onSnapshot, collection, query, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js"; // Cambiado getDocs a getDoc
+        import { getFirestore, doc, setDoc, onSnapshot, collection, query, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Variables globales de Firebase
         let app;
@@ -132,8 +132,10 @@
 
         // Obtener variables de entorno de Canvas
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        // FIX: Corregido el error de referencia de `initialAuthToken` antes de la inicialización
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
 
         // Array de objetos de regalos con un ID único y nombre
         const gifts = [
@@ -143,8 +145,8 @@
             { id: 'full-cutlery', name: 'Cubiertos completos' },
             { id: 'grey-towels', name: 'Toallas grandes y de manos color gris' },
             { id: 'wall-clock', name: 'Reloj de pared' },
-            { id: 'double-duvet-cover', name: 'Cubrecama caliente y liviano para cama semidoble (gris)' },
-	    { id: 'single-duvet-cover', name: 'Cubrecama caliente y liviano para cama sencilla (gris)' },
+            { id: 'duvet-cover', name: 'Cubrecama caliente y liviano para cama semidoble (gris)' },
+            { id: 'duvet-cover-single', name: 'Cubrecama caliente y liviano para cama sencilla (gris)' }, // Nueva opción
             { id: 'non-stick-pots', name: 'Batería de Ollas antiadherentes' },
             { id: 'grain-organizers', name: 'Organizadores de granos' },
             { id: 'bathroom-bin', name: 'Caneca para baño' },
@@ -219,7 +221,7 @@
             }
             try {
                 const docRef = doc(db, `artifacts/${appId}/public/data/guestSelections`, userId);
-                const docSnap = await getDoc(docRef); // Cambiado getDocs a getDoc
+                const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     if (data && data.selectedGifts) {
